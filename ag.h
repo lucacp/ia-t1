@@ -1,9 +1,11 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include <time.h>
 
 #define TAM_POPULACAO 10
 #define ERRONALEITURA 1
+#define OK 2
 
 //#define QTDPROF
 //#define QTDDISC//
@@ -19,9 +21,12 @@ typedef struct gene{
 	int dia_sem;	
 	char *prof;
 	int *notpref;
+	int numpref;
 	int disc;
 	int sala;
 	int sala_id;
+	int periodo;
+	char sem[4];
 	//outres *test;
 }genes;
 
