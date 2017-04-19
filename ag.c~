@@ -13,6 +13,7 @@ int par,impar;
 prof_aux *pf;
 semestre *sm;
 disc_aux *dsa;
+semestre *auxsm;
 
 int  avaliacao(indvo *ppl){
 
@@ -223,7 +224,7 @@ int testaRestricao(indvo ppl, disc_aux t, int horario){
 				if(strcmp(ppl.genes_indv[i].prof,t.nome)==0 && horario==23)			
 					return 0;
 				
-			
+				//puts("putds");
 			
 			}
 			else if(ppl.genes_indv[i].dia_sem == 6){
@@ -247,7 +248,6 @@ int testaRestricao(indvo ppl, disc_aux t, int horario){
 
 
 }
-
 int *copiaVetor(int *a, int *b, int tam){
 
 	int i;
@@ -321,17 +321,18 @@ int geraSala(semestre *aux, int n){
 	int g;
 	//printf("%d %d", aux[n].num,n);puts("oi");
 	//srand((unsigned) time(NULL));
-	g = rand() % aux[n].num;
+	//srand(time(NULL));	
+	//g = rand() % aux[n].num;
 	//printf("g : %d, %d, %d , hor: %d\n", g,aux[n].num,n,aux[n].horarios[g]); 
 	//return 1;
-	if(aux[n].horarios[g] < 0){	
-		for(i = 0; i < aux[n].num;i++)
-			if(aux[n].horarios[i] >= 0) return i;	
+	
+	for(i = 0; i < aux[n].num;i++)
+		if(aux[n].horarios[i] >= 0) return i;	
 	
 	
-	}
+	
 		
-	return g;		
+	return -1;		
 	
 	
 
@@ -440,10 +441,11 @@ void quicksort(int *vetor, int inicio, int fim){
 }
 */
 int *imprimeaux(indvo *ppl, char semestre[4]){
-	int i;
+	int i,j;
 	aux = 0;
 	int a = ppl->qtd;
 	int *v = (int * )malloc(sizeof(int)*10);
+	
 	par = 0;impar =0;
 	for(i = 0 ; i < a; i++){
 		if(strcmp(ppl->genes_indv[i].sem,semestre)==0){
@@ -462,13 +464,66 @@ int *imprimeaux(indvo *ppl, char semestre[4]){
 		}
 	}
 	return v;
+}
+int *imprimeaux2(indvo *ppl, int * v){
+	int j = 0;
+	int i;
+	int temp;
+	int *v2 = (int * )malloc(sizeof(int)*10);
+	int *v1 = (int * )malloc(sizeof(int)*10);
+	int *v3 = (int * )malloc(sizeof(int)*10);
+	for(i = 0; i < aux;i++){
+		
+		v1[i] = ppl->genes_indv[v[i]].dia_sem;	
+	}
+	
+	for(i = 0; i < aux; i++){
+		if(v1[i]%2 == 0){
+			
+			v2[j] = v1[i];
+			j++;
+			
+		}	
+		//printf("ll %d\n", v2[1]);	
+	}
+	
+	for(i = 0 ; i < aux; i++){
+		if(v1[i]%2 != 0){
+			
+				v2[j] = v1[i];
+				j++;
+			
+		} 	
+	}
+	j = 0;i=0;
+	int k = 0;
+	for(k = 0; k < aux; k++){
+		for(i = 0; i < aux;i++){
+			if(v2[k]==v1[i]){
+				v3[k] = v[i];		
+				break;
+			}
+		}	
+	}
+	for(i = 0; i < aux;i++)v[i] = v3[i];
+	for(i = 0; i < 20;i++){
+		
+	
+	
+	}
+	//for(i = 0; i < aux;i++)printf("%d ", v2[i]);
+//	printf("\n");
+	//for(k = 0; k < aux;k++) {
+	//			printf("%d ", v3[k]);}
+	free(v1);free(v3);	
+	return v2;
 		
 
 }
-int pertenceA(indvo *ppl,int *v,int k){
+int pertenceA(int *v,int test){
 	int i,j;
 	for(i = 0; i < aux;i++){
-		if(ppl->genes_indv[v[i]].dia_sem == k)return 1;
+		if(v[i] == test)return 1;
 	}
 	return 0;
 
@@ -478,7 +533,7 @@ void imprime(indvo *ppl, disc_aux *dd){
 	
 	int a = ppl->qtd;//puts(pop->individuos[0].genes_indv[a-1].sem);
 	int i,j,k;
-	int *v ;
+	int *v,*v2 ;
 	int ispar = 2;
 	/*for(i = 0; i < a;i++){
 		//printf("%d ", pop->individuos[0].genes_indv[i].dia_sem);
@@ -522,8 +577,9 @@ void imprime(indvo *ppl, disc_aux *dd){
 	//	printf(" %d : Disc: %s, Prof: %s, horario: %d, sala: %d \n", k+1,dd[pop->individuos[0].genes_indv[k].disc].cod,
 	//	 pop->individuos[0].genes_indv[k].prof, pop->individuos[0].genes_indv[k].dia_sem,
 	//	 pop->individuos[0].genes_indv[k].sala);
+	int flag =0;
 	for(i  = 0; i < qtdsem;i++){
-		j = 0;ispar = 2;k=0;
+		j = 0;ispar = 2;k=0;flag = 0;
 		printf("\nSemestre : %s\n", sm[i].se);
 		printf("----------------------------------------------------------------------------------------------------------------------|\n");
 	   printf("|-----|       S         |         T       |                Q       |             Q        |             S             |\n");
@@ -560,62 +616,127 @@ void imprime(indvo *ppl, disc_aux *dd){
 			
 			}
 		}
-		else if(sm[i].se[0]=='M'){
+		//else if(sm[i].se[0]=='M'){
+		else if(strcmp(sm[i].se,"M3")==0){
 			printf("07:30-|");
 	  		v= imprimeaux(ppl,sm[i].se);
-	  		k = 0;
-			while(1){
-				//for(k = 0; k < aux;k++)
-					//printf("%d ", ppl->genes_indv[v[k]].dia_sem);
-			//	return;
-				if(!pertenceA(ppl,v,k) && ispar%2==0){
-						printf("  BRANCO      |");
-						if(8 == k){printf("\n");printf("10:10-|");j = 0;ispar = 1;k=1;}
-											
-				}
-				else if(!pertenceA(ppl,v,k) && ispar%2!=0){
-						printf("      |");						
-						if(9 == k){printf("\n");ispar = 2;break;}
-				
-				}
-				else{
-					if(ispar%2==0 && ppl->genes_indv[v[j]].dia_sem%2 == 0){
-						//printf("D>%d", ppl->genes_indv[v[j]].dia_sem);
-					printf(" %d %s(%s)         |", ppl->genes_indv[v[j]].dia_sem,dsa[ppl->genes_indv[v[j]].disc].cod,ppl->genes_indv[v[j]].prof);
-					//printf("p:>%d ", ppl->genes_indv[v[j]].dia_sem);
-						if(ppl->genes_indv[v[j]].dia_sem==8){
-							ispar = 1;j=0;k = 1;
-							printf("\n");printf("10:10-|");					
-						}				
+	  		//for(k = 0; k < aux;k++) {
+			//	printf("%d>%d ", v[k], ppl->genes_indv[v[k]].dia_sem);}	  		
+	  		//printf("\n");
+	  		v2 = imprimeaux2(ppl,v);
+	  		k = 0;//printf("\n");
+			//for(k = 0; k < aux;k++) {
+			//	printf("%d ", v2[k]);}	  		
+	  		int r= 0;k=0;
+			while(1){//printf("n :(%d %d %d %d %d)   ", v2[j],k,j,aux,ispar);
+				if(ispar%2 == 0 && v2[j]%2==0){
 					
-				
-					}
-					else if(ispar%2!=0 && ppl->genes_indv[v[j]].dia_sem%2!=0){
+					if(pertenceA(v2,k)==1){
+						printf(" %d %s(%s)         |", v2[j],dsa[ppl->genes_indv[v[j]].disc].cod,
+						ppl->genes_indv[v[j]].prof);
 						
-						printf(" %d %s(%s)          |", ppl->genes_indv[v[j]].dia_sem,dsa[ppl->genes_indv[v[j]].disc].cod,ppl->genes_indv[v[j]].prof);
-						//printf("t:>%d ", ppl->genes_indv[v[j]].dia_sem);
-						if(ppl->genes_indv[v[j]].dia_sem==9){
-							ispar = 2;
+						if(v2[j] == 8){
+						printf("\n");printf("10:10-|");ispar = 1;k=-1;}
+						
 							
-							printf("\n");					
-							break;
-						}
-								
+						
 					}
+					
+					else if(pertenceA(v2,k)==0){
+						
+						
+						
+						printf("     BRANCO      |");					
+						if(k >= 8){printf("\n");printf("10:10-|");ispar = 1;k=-1;}
+						if(ispar%2 == 0){j--;}
+					}
+					
+				}
+				else if(ispar%2!=0 && v2[j]%2!=0){
+					if(pertenceA(v2,k) == 1){
+						printf(" %d %s(%s)         |", v2[j],dsa[ppl->genes_indv[v[j]].disc].cod,
+						ppl->genes_indv[v[j]].prof);			
+						if(v2[j] == 9){
+						printf("\n");ispar = 2;k=0;break;}
+					}				
+					else if(pertenceA(v2,k)==0){
+						if(ispar%2!=0){j--;}
+						printf("     BRANCO      |");					
+						if(k >= 9){printf("\n");ispar = 2;k=0;break;}
+											
+					}
+				
+				
+				}
+			
+			
+			j++;
+			if(j+1 == aux)j = aux-1;
+			if(ispar%2 == 0){k+=2;}
+			else if(ispar%2!=0){k+=2;}
+			if(k>8 && ispar%2 == 0)k=8;
+			else if(k > 8 && ispar%2!=0)k = 9;
+			if(v2[j]%2!=0 && ispar%2==0){
+				j--;
+			}	
+		}
+		if(par > 8 || impar > 9){
+			j = 0;ispar = 2; k = 10;
+			printf("13:30-|");
+			while(1) {
+				if(v2[j] > 9){		
+					if(ispar%2 == 0 && v2[j]%2==0){
+						if(pertenceA(v2,k)==1){
+						printf(" %d %s(%s)         |", v2[j],dsa[ppl->genes_indv[v[j]].disc].cod,
+						ppl->genes_indv[v[j]].prof);
+						
+						if(v2[j] == 18){
+						printf("\n");printf("15:20-|");ispar = 1;k=9;}
+								
+					  }
+					  else if(pertenceA(v2,k)==0){
+						
+						
+						
+						printf("     BRANCO      |");					
+						if(k >= 18){printf("\n");printf("15:20-|");ispar = 1;k=9;}
+						if(ispar%2 == 0){j--;}
+					} 
+				}
+				else if(ispar%2!=0 && v2[j]%2!=0){
+					if(pertenceA(v2,k) == 1){
+						printf(" %d %s(%s)         |", v2[j],dsa[ppl->genes_indv[v[j]].disc].cod,
+						ppl->genes_indv[v[j]].prof);			
+						if(v2[j] == 19){
+						printf("\n");ispar = 2;k=0;break;}
+					}				
+					else if(pertenceA(v2,k)==0){
+						if(ispar%2!=0){j--;}
+						printf("     BRANCO      |");					
+						if(k >= 19){printf("\n");ispar = 2;k=0;break;}
+											
+					}
+				
+				
 				}
 				
-				k +=2;
-				if(k == 10)k= 0;
-				if(j == aux)j=0;
-				else j++;
 			}
-		
+			j++;
+			if(j+1 == aux)j = aux-1;
+			if(ispar%2 == 0){k+=2;}
+			else if(ispar%2!=0){k+=2;}
+			if(k>18 && ispar%2 == 0)k=18;
+			else if(k > 18 && ispar%2!=0)k = 19;
+			if(v2[j]%2!=0 && ispar%2==0){
+				j--;
+			}			
+		}
 		
 		
 		}
-	
+	}
 		else{
-	
+			continue;
 			printf("19:10-|");
 	  		v= imprimeaux(ppl,sm[i].se);
 	  		
@@ -653,7 +774,7 @@ void imprime(indvo *ppl, disc_aux *dd){
 		}
 		
 	}
-		
+	puts("oitodeis");	
 	//temp = (int *)malloc(sizeof(int)*a);
 	//if(pop->individuos[0].genes)
 	//printf("-----------------------------------\n");
@@ -661,10 +782,88 @@ void imprime(indvo *ppl, disc_aux *dd){
 	//printf("13:30-|");
 	//for(i = 0 ; i < a;i++)
 }
+
+int mutacao(indvo *ppl){
+
+	int r = rand() % ppl->qtd;
+	int numsala;
+	int distt,i,j,flag;
+	printf("MUt");
+	printf("%d %s ", ppl->genes_indv[r].dia_sem,
+	ppl->genes_indv[r].prof);
+	
+	//free(auxsm)
+	auxsm = copiaEst(sm);
+	if(strcmp(ppl->genes_indv[r].sem,"V1")==0){
+			numsala = achaSala(ppl->genes_indv[r].sem);
+	}
+	else if(ppl->genes_indv[r].sem[0]=='M'){
+			numsala = achaSala(ppl->genes_indv[r].sem);	
+	}
+	else if(ppl->genes_indv[r].sem[0]=='N'){
+			numsala = achaSala(ppl->genes_indv[r].sem);	
+	}
+		//printf("N %d ", numsala);
+		//printf("%d %d %s\n", numsala,temp,dsa[j].cod_sem);
+		
+	for(i = 0 ; i < auxsm[numsala].num;i++){
+		for(j = 0; j < ppl->qtd;j++){
+			if(strcmp(ppl->genes_indv[j].sem,auxsm[numsala].se)==0 && (ppl->genes_indv[j].dia_sem == auxsm[numsala].horarios[i]))
+				auxsm[numsala].horarios[i] = -1;
+		}
+	}
+	if(ppl->genes_indv[r].dia_sem != auxsm[numsala].horarios[auxsm[numsala].num-1]){
+		for(i = 0; i < auxsm[numsala].num;i++){
+			if((auxsm[numsala].horarios[i]!= -1 && 
+				auxsm[numsala].horarios[i]!= ppl->genes_indv[r].dia_sem)){
+					distt = i;flag = 1;break;				
+				} 
+		}
+		
+		while(1){
+			flag = 1;
+			if(!testaRestricao(*ppl, dsa[ppl->genes_indv[r].disc], auxsm[numsala].horarios[distt])){printf("hj");
+				for(i = 0; i < auxsm[numsala].num;i++){
+					if((auxsm[numsala].horarios[i]!= -1) && 
+					(auxsm[numsala].horarios[i]!= auxsm[numsala].horarios[distt])){
+						distt = i;flag = 0;break;				
+					} 			
+			
+				}					
+				if(distt != i)return 0;
+					
+			}
+			for(i = 0; i < ppl->qtd;i++){
+				if(ppl->genes_indv[i].dia_sem == auxsm[numsala].horarios[distt] &&
+				strcmp(ppl->genes_indv[i].sem,sm[ppl->genes_indv[i].sala_id].se)==0){printf("lç");
+					int dfi;				
+					for(dfi = 0; dfi < qtddisc;dfi++){
+					if((auxsm[numsala].horarios[dfi] != auxsm[numsala].horarios[distt]) &&
+						auxsm[numsala].horarios[dfi] >= 0){distt = dfi;flag=0;printf("pppp");break;}			
+						}
+					if(dfi!=distt) return 0;	
+					
+					//continue;
+				}
+			}
+			puts("laco");
+			if(flag == 1)break;
+		}
+		ppl->genes_indv[r].dia_sem = auxsm[numsala].horarios[distt];
+		avaliacao(ppl);
+		return 1;
+	}
+	else return 0;
+	//distt = geraSala(auxsm,numsala);
+		
+
+}
+
+
 void geraIndividuos(plcao *populacao_t, char *arq){
 
 
-	semestre *auxsm;
+	
 	int i,j,k,temp,flag = 0,turno,numsala;
 	int discomp = 0, distt,test;
 	plcao *ppl = NULL;
@@ -689,15 +888,23 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 	for(i = 0; i < 30;i++) salasd[i] = i;
 	
 	discomp = testaParada(v);
-	
+	srand(time(NULL));
+	int x = 0;
 	while(discomp){
 		//Escolhe disciplina aleatoria
-		//srand((unsigned) time(NULL));
+		int ll;		
+		//srand(0);
 		j = rand() %qtddisc;
-		
+		//if(x > 37){
+			//for(ll = 0; ll < qtddisc;ll++)
+		///	printf("%d ", v[ll]);
+		//	printf("j:%d\n", j);
+		//	return;
+		printf("\n");
+	//}
 		if(v[j] < 1){
 			for(i = 0; i < qtddisc;i++)		
-				if(v[i] >0){ j = i;break;}
+				if(v[i] >0){ j = i;}
 		}
 		
 		if(strcmp(dsa[j].cod_sem,"V1")==0){
@@ -715,20 +922,37 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 		//printf("N %d ", numsala);
 		//printf("%d %d %s\n", numsala,temp,dsa[j].cod_sem);
 		distt = geraSala(auxsm,numsala);
-		
+		printf("dist>%d %d", auxsm[numsala].horarios[distt],numsala);
+		int l;		
+		for(l = 0 ; l < auxsm[numsala].num;l++)
+			printf("%d ", auxsm[numsala].horarios[l]);
 		//if(ppl->individuos[0].genes_indv[j].prof)
 		if(distt < 0)continue;
-		//printf("%d", distt);		
-		//return;
-		//auxsm[numsala].horario[distt] = 
-		//Testa restricao de horario
-		if(!testaRestricao(ppl->individuos[0], dsa[j], auxsm[numsala].horarios[distt]))continue;
+		
+		if(!testaRestricao(ppl->individuos[0], dsa[j], auxsm[numsala].horarios[distt])){
+			int dfi;
+			puts("rest");
+			for(dfi = 0; dfi < qtddisc;dfi++)
+				if((auxsm[numsala].horarios[dfi] != auxsm[numsala].horarios[distt]) &&
+					auxsm[numsala].horarios[dfi] >= 0){distt = dfi;break;}			
+		
+			if(dfi != distt)continue; 	
+		}
 		for(i = 0; i < ppl->individuos[0].qtd;i++){
 			if(ppl->individuos[0].genes_indv[i].dia_sem == auxsm[numsala].horarios[distt] &&
-				strcmp(ppl->individuos[0].genes_indv[i].prof,dsa[j].nome)==0){flag = 1; break;}		
+				strcmp(ppl->individuos[0].genes_indv[i].prof,dsa[j].nome)==0){
+				int dfi;				
+				for(dfi = 0; dfi < qtddisc;dfi++)
+				if((auxsm[numsala].horarios[dfi] != auxsm[numsala].horarios[distt]) &&
+					auxsm[numsala].horarios[dfi] >= 0){distt = dfi;break;}			
+						
+				if(dfi!=distt)continue;	
+					
+					//continue;
+			}		
 		
 			else if(ppl->individuos[0].genes_indv[i].dia_sem == auxsm[numsala].horarios[distt] &&
-			strcmp(dsa[j].cod_sem,ppl->individuos[0].genes_indv[i].sem)==0){puts("oi");flag = 1; break;}
+			strcmp(dsa[j].cod_sem,ppl->individuos[0].genes_indv[i].sem)==0){puts("oi");flag = 1; continue;;}
 			
 			
 			/*else if(ppl->individuos[0]->genes_ind[i].dia_sem == temp &&
@@ -765,15 +989,7 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 			}
 			else if(v[j] == 2) v[j]--;
 			
-			//printf(" %d %d \n", dsa[j].periodo,v[j]); 
-			if(v[j] == -2){printf("JJJ> %d", j);return;}
-			/*if(ppl->individuos[0].qtd>63){
-				int p;
-				for(p = 0 ; p < qtddisc;p++)
-					printf("%d ", v[p]);				
-				
-				
-				return;}*/
+			
 			
 			//Marca sala indisponivel			
 			
@@ -797,61 +1013,31 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 			ppl->individuos[0].genes_indv[ppl->individuos[0].qtd].sala_id);
 				
 			*/
-			
+			//int ll;
 			ppl->individuos[0].qtd++;
 			discomp = testaParada(v);
+			
 			//printf("disc>%d ", discomp);		
 			//discomp--;		
 		}
 		else flag = 0;
-		
+		x++;
 	}
 	//puts(ppl->individuos[0].genes_indv[ppl->individuos[0].qtd-1].sem);
 	//imprime(ppl);
 	int b;
-	//for(b = 0; b < 62;b++)
-	//	if(ppl->individuos[0].genes_indv[b].disc==36)
-	//	printf("%d : %d %s \n",b,ppl->individuos[0].genes_indv[b].dia_sem,
-	//		ppl->individuos[0].genes_indv[b].prof);
-	//return;	
+	
 	quicksort2(ppl->individuos[0].genes_indv,0,ppl->individuos[0].qtd-1);
 	imprime(&ppl->individuos[0],dsa);
 	avaliacao(&ppl->individuos[0]);
 	printf("Quebra: %d prf >: %d", ppl->individuos[0].choques, ppl->individuos[0].qtdpr);	
-	/*int b = 0;
-	for(b = 0;b  < 62;b++)	
-		printf("%d %s %s \n", ppl->individuos[0].genes_indv[b].dia_sem,ppl->individuos[0].genes_indv[b].prof,
-		ppl->individuos[0].genes_indv[b].sem);
-	printf("%d %s %s \n", ppl->individuos[0].genes_indv[1].dia_sem,ppl->individuos[0].genes_indv[1].prof,
-	ppl->individuos[0].genes_indv[1].sem);
-	printf("%d %s %s \n", ppl->individuos[0].genes_indv[2].dia_sem,ppl->individuos[0].genes_indv[2].prof,
-	ppl->individuos[0].genes_indv[2].sem);
-	printf("%d %s %s \n", ppl->individuos[0].genes_indv[3].dia_sem,ppl->individuos[0].genes_indv[3].prof
-	,ppl->individuos[0].genes_indv[3].sem);
-	for(i=0;i<qtdprof;i++) {
-		printf("Nome : %s \n",pf[i].nome);
-		for(j = 0; j < pf[i].num;j++)
-			printf("%d ", pf[i].horarios[j]);
-		printf("\n\n");		
-		}*
-		
-		for(i = 0; i < qtdsem;i++){
-			printf("Cod : %s %d \n",sm[i].se,sm[i].num);
-			for(j = 0; j < sm[i].num;j++)
-				printf("%d ", sm[i].horarios[j]);
-			printf("\n\n");	
-		
-		
-		}
-		
-		for(i = 0; i < qtddisc;i++)
-			printf("Cod : %s per: %d %s %s \n",dsa[i].cod,dsa[i].periodo, dsa[i].cod_sem,dsa[i].nome);
-			
-		*/
-		
+	puts("okeeee");	
+	if(mutacao(&ppl->individuos[0])){
+		puts("h2w2e3");
+		imprime(&ppl->individuos[0],dsa);}
+	puts("herellll");
+		puts("ok");	
 	
-
-
 }
 int main(int argc, char *argv[ ] ){
 	int i= 0;
