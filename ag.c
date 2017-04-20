@@ -301,6 +301,7 @@ semestre *copiaEst(semestre *ss){
 	int i,j;
 	aux = (semestre *)malloc(sizeof(semestre)*qtdsem);
 	for(i = 0 ; i < qtdsem;i++){
+		strcpy(aux[i].se,ss[i].se);
 		aux[i].num = ss[i].num;
 		aux[i].sala = ss[i].sala;
 		aux[i].horarios = (int *)malloc(sizeof(int)*aux[i].num);
@@ -465,52 +466,166 @@ int *imprimeaux(indvo *ppl, char semestre[4]){
 	}
 	return v;
 }
-int *imprimeaux2(indvo *ppl, int * v){
+int *imprimeaux2(indvo *ppl, int * v, char turn){
 	int j = 0;
-	int i;
+	int i,k;
 	int temp;
-	int *v2 = (int * )malloc(sizeof(int)*10);
+	int *v2 = (int * )malloc(sizeof(int)*20);
 	int *v1 = (int * )malloc(sizeof(int)*10);
-	int *v3 = (int * )malloc(sizeof(int)*10);
+	int *v3 = (int * )malloc(sizeof(int)*20);
 	for(i = 0; i < aux;i++){
 		
 		v1[i] = ppl->genes_indv[v[i]].dia_sem;	
 	}
-	
-	for(i = 0; i < aux; i++){
-		if(v1[i]%2 == 0){
-			
-			v2[j] = v1[i];
-			j++;
-			
-		}	
-		//printf("ll %d\n", v2[1]);	
-	}
-	
-	for(i = 0 ; i < aux; i++){
-		if(v1[i]%2 != 0){
-			
+	//for(i = 0; i < aux; i++)printf("%d ", v[i]);
+	//	printf("\n");
+		
+	//	for(i = 0; i < aux; i++)printf("%d ", v1[i]);
+	//	printf("\n");
+	if(turn == 'M'){
+		temp = 0;
+		
+		//Copia valores pares menores que 10
+		for(i = 0; i < aux; i++){
+			if((v1[i]%2 == 0 && v1[i] < 10) && v1[i]==temp){
 				v2[j] = v1[i];
 				j++;
+				temp+=2;
+			}
+			else if((v1[i]%2 == 0 && v1[i] < 10) && v1[i]!=temp){
+				v2[j] = -1;
+				j++;i--;temp+=2;			
 			
-		} 	
+			}
+		//printf("ll %d\n", v2[1]);	
+		}
+		temp = 1;
+		//Copia valores impares menores que 10
+		for(i = 0 ; i < aux; i++){
+			if((v1[i]%2 != 0 && v1[i] < 10)&& v1[i]==temp){
+				v2[j] = v1[i];
+				j++;temp+=2;
+			
+			}
+			else if((v1[i]%2!=0 && v1[i] < 10) && v1[i]!=temp){
+				v2[j] = -1;			
+				j++;i--;temp+=2;
+			} 	
+		}
+		temp = 10;
+		//Copia valores pares maiores que 9
+		for(i = 0; i < aux; i++){
+			if((v1[i]%2 == 0 && v1[i] >= 10) && v1[i]==temp){
+				v2[j] = v1[i];
+				j++;temp+=2;
+			
+			}
+			else if((v1[i]%2==0 && v1[i] >= 10) && v1[i]!=temp){
+				v2[j] = -1;
+				j++;i--;temp+=2;			
+			
+			}	
+		//printf("ll %d\n", v2[1]);	
+		}
+		v2[j++] = -1;
+		temp = 11;
+		//Copia valores impares maiores que 9
+		for(i = 0 ; i < aux; i++){
+			if((v1[i]%2 != 0 && v1[i] >= 10) && v1[i]==temp){
+				v2[j] = v1[i];
+				j++;temp+=2;
+			
+			}
+			else if((v1[i]%2!=0 && v1[i] >=10) && v1[i]!=temp){
+				v2[j] = -1;
+				j++;i--;temp+=2;
+			
+			} 	
+		}
+		if(j < 20){
+			for(; j < 20;j++)	
+				v2[j] = -1;
+		}
+			
+		//for(i = 0; i < j;i++)
+		//	printf("%d ", v2[i]);
+		//printf("\n");
+		
+		
+		
 	}
-	j = 0;i=0;
-	int k = 0;
-	for(k = 0; k < aux; k++){
+	if(turn=='N'){
+		temp = 20;
+		for(i = 0; i < aux; i++){
+			if((v1[i]%2 == 0 && v1[i]==temp)){
+				v2[j] = v1[i];
+				j++;
+				temp+=2;
+			}
+			else if((v1[i]%2 == 0 && v1[i]!=temp)){
+				v2[j] = -1;
+				j++;i--;temp+=2;			
+			
+			}
+		}
+		temp = 21;
+		for(i = 0; i < aux; i++){
+			if((v1[i]%2 != 0 && v1[i]==temp)){
+				v2[j] = v1[i];
+				j++;
+				temp+=2;
+			}
+			else if((v1[i]%2 != 0 && v1[i]!=temp)){
+				v2[j] = -1;
+				j++;i--;temp+=2;			
+			
+			}
+		}
+		/*int p;
+		int k;
+		for(k = 0; k < 10; k++){
+			for(i = 0; i < aux;i++){
+				if(v2[k]==v1[i]){
+					v2[k] = v[i];		
+					break;
+				}
+			}				
+		}	*/	
+		
+			
+		
+	//	for(i = 0; i < j;i++)
+	//		printf("%d ", v2[i]);
+	//	printf("\n");
+	}
+	if(turn=='M')temp = 20;
+	else temp = 10;
+	
+	for(k = 0; k < temp; k++){
 		for(i = 0; i < aux;i++){
 			if(v2[k]==v1[i]){
-				v3[k] = v[i];		
+				v2[k] = v[i];		
 				break;
 			}
-		}	
+		}				
 	}
-	for(i = 0; i < aux;i++)v[i] = v3[i];
-	for(i = 0; i < 20;i++){
-		
 	
+	//for(i = 0; i < j;i++)
+	//		printf("%d ", v2[i]);
+	//	printf("\n");		
+	/*
+		i=0;
+		int k = 0;
+		for(k = 0; k < aux; k++){
+			for(i = 0; i < aux;i++){
+				if(v2[k]==v1[i]){
+					v3[k] = v[i];		
+					break;
+				}
+			}	
+		}
+		for(i = 0; i < aux;i++)v[i] = v3[i];*/
 	
-	}
 	//for(i = 0; i < aux;i++)printf("%d ", v2[i]);
 //	printf("\n");
 	//for(k = 0; k < aux;k++) {
@@ -616,14 +731,40 @@ void imprime(indvo *ppl, disc_aux *dd){
 			
 			}
 		}
+	else if(sm[i].se[0]=='M'){
+		v= imprimeaux(ppl,sm[i].se);
+		v2 = imprimeaux2(ppl,v,sm[i].se[0]);
+		printf("07:30-|");
+		for(k = 0; k < 20; k ++){
+			if(v2[k]!= -1)
+				printf(" %s(%s)         |", dsa[ppl->genes_indv[v2[k]].disc].cod,ppl->genes_indv[v2[k]].prof);
+			else printf("     BRANCO      |");	
+			if(k >= 4 && k<5){
+				printf("\n10:10-|");
+			
+			}
+					
+			else if(k >=15 && k < 16)
+				printf("\n13:30-|"); 
+		
+			else if(k >=19)
+				printf("\n15:20-|");
+		}
+	
+	
+	
+	
+	}		
+		
+		
 		//else if(sm[i].se[0]=='M'){
-		else if(strcmp(sm[i].se,"M3")==0){
+		/*else if(strcmp(sm[i].se,"M5")==0){
 			printf("07:30-|");
 	  		v= imprimeaux(ppl,sm[i].se);
 	  		//for(k = 0; k < aux;k++) {
 			//	printf("%d>%d ", v[k], ppl->genes_indv[v[k]].dia_sem);}	  		
 	  		//printf("\n");
-	  		v2 = imprimeaux2(ppl,v);
+	  		v2 = imprimeaux2(ppl,v,sm[i].se[0]);return ;
 	  		k = 0;//printf("\n");
 			//for(k = 0; k < aux;k++) {
 			//	printf("%d ", v2[k]);}	  		
@@ -773,7 +914,7 @@ void imprime(indvo *ppl, disc_aux *dd){
 	
 		}
 		
-	}
+	}*/
 	puts("oitodeis");	
 	//temp = (int *)malloc(sizeof(int)*a);
 	//if(pop->individuos[0].genes)
@@ -781,13 +922,22 @@ void imprime(indvo *ppl, disc_aux *dd){
 	//printf("|_____  S --- T --- Q --- Q --- S-----\n");
 	//printf("13:30-|");
 	//for(i = 0 ; i < a;i++)
+	}
+
 }
 //nao finalizado/
 int mutacao(indvo *ppl){
 
 	int r = rand() % ppl->qtd;
+	
 	int numsala;
+	
 	int distt,i,j,flag;
+
+	for(i = 0 ; i < ppl->qtd;i++)
+		if(strcmp(ppl->genes_indv[i].sem,"M3")==0){
+			r = i;break;
+		}
 	printf("MUt");
 	printf("%d %s ", ppl->genes_indv[r].dia_sem,
 	ppl->genes_indv[r].prof);
@@ -812,6 +962,11 @@ int mutacao(indvo *ppl){
 				auxsm[numsala].horarios[i] = -1;
 		}
 	}
+	//puts(auxsm[numsala].se);
+	for(i = 0; i < auxsm[numsala].num;i++)
+	 printf("%d ", auxsm[numsala].horarios[i]);
+	//return 0;
+	printf("\n");
 	if(ppl->genes_indv[r].dia_sem != auxsm[numsala].horarios[auxsm[numsala].num-1]){
 		for(i = 0; i < auxsm[numsala].num;i++){
 			if((auxsm[numsala].horarios[i]!= -1 && 
@@ -819,37 +974,40 @@ int mutacao(indvo *ppl){
 					distt = i;flag = 1;break;				
 				} 
 		}
-		
+		printf("rTTT : %d ",distt);
 		while(1){
 			flag = 1;
-			if(!testaRestricao(*ppl, dsa[ppl->genes_indv[r].disc], auxsm[numsala].horarios[distt])){printf("hj");
-				for(i = 0; i < auxsm[numsala].num;i++){
+			if(!testaRestricao(*ppl, dsa[ppl->genes_indv[r].disc], auxsm[numsala].horarios[distt])){printf("restricao");
+				printf("\n");
+				for(i = distt; i < auxsm[numsala].num;i++){
 					if((auxsm[numsala].horarios[i]!= -1) && 
 					(auxsm[numsala].horarios[i]!= auxsm[numsala].horarios[distt])){
 						distt = i;flag = 0;break;				
 					} 			
 			
 				}					
-				if(distt != i)return 0;
+				if(i>=auxsm[numsala].horarios[auxsm[numsala].num])return 0;
 					
 			}
 			for(i = 0; i < ppl->qtd;i++){
 				if(ppl->genes_indv[i].dia_sem == auxsm[numsala].horarios[distt] &&
-				strcmp(ppl->genes_indv[i].sem,sm[ppl->genes_indv[i].sala_id].se)==0){printf("lç");
+				strcmp(ppl->genes_indv[i].sem,sm[ppl->genes_indv[i].sala_id].se)==0){printf("igual");
 					int dfi;				
-					for(dfi = 0; dfi < qtddisc;dfi++){
-					if((auxsm[numsala].horarios[dfi] != auxsm[numsala].horarios[distt]) &&
-						auxsm[numsala].horarios[dfi] >= 0){distt = dfi;flag=0;printf("pppp");break;}			
+					for(dfi = distt; dfi < auxsm[numsala].num;dfi++){
+					//if((auxsm[numsala].horarios[dfi] != auxsm[numsala].horarios[distt]) &&
+						if(auxsm[numsala].horarios[dfi] >= 0){distt = dfi;flag=0;printf("pppp");break;}			
 						}
-					if(dfi!=distt) return 0;	
-					
+					if(i>=auxsm[numsala].horarios[auxsm[numsala].num])return 0;
 					//continue;
 				}
 			}
 			puts("laco");
 			if(flag == 1)break;
 		}
+		puts("passe");
+		printf("novo > %d %d\n", ppl->genes_indv[r].dia_sem,auxsm[numsala].horarios[distt]);
 		ppl->genes_indv[r].dia_sem = auxsm[numsala].horarios[distt];
+		quicksort2(ppl->genes_indv,0,ppl->qtd-1);
 		avaliacao(ppl);
 		return 1;
 	}
@@ -1035,6 +1193,7 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 	if(mutacao(&ppl->individuos[0])){
 		puts("h2w2e3");
 		imprime(&ppl->individuos[0],dsa);}
+	else puts("naodeu");
 	puts("herellll");
 		puts("ok");	
 	

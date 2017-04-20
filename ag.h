@@ -78,3 +78,5 @@ typedef struct disc{
 prof_aux *leProfessores(char arq[20]);
 semestre *leSemestre(char arq[20]);
 disc_aux *leDisciplina(char arq[20]);
+
+int testaParada(int *v);

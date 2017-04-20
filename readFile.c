@@ -3,6 +3,50 @@
 
 //int qtdprof, qtddisc,qtdsem;
 
+int auxF(int *v, int tam){
+
+	int i;	
+	int flag = 0;
+	for(i = 0; i < tam;i++)
+		if(v[i] > 0){flag = 1;break;}
+		
+	return flag;
+	
+}
+int *geraSequencia(int *v, int tam){
+
+	int i,j;
+	int r,r1;
+	srand(time(NULL));
+	int *m = (int *)malloc(sizeof(int)*tam);
+	int *v1 = (int *)malloc(sizeof(int)*tam);
+	j = 0;
+	//for(i = 0 ; i < tam;i++) printf("%d ", v[i]);
+//printf("\n");
+	for(i = 0 ; i < tam;i++) m[i] = 1;
+	//puts("t");
+	//printf("RRR> %d",);
+	while(auxF(m,tam)){
+		
+		r= rand() %tam; //printf("rand %d\n", r);
+		if(m[r] == -1){
+			for(i = 0; i < tam;i++){
+				if(m[i] != -1)	{	
+					v1[j] = v[i];
+					r = i;
+				}
+			}
+		}
+		else v1[j] = v[r];
+
+		m[r] = -1;
+		j++;	
+	}//puts("k");
+	//for(i = 0 ; i < tam;i++) printf("T.%d ", v1[i]);
+	//printf("\n");
+	free(m);free(v);
+	return v1;
+}
 prof_aux *leProfessores(char arq[20]){
 	int qtd =0;
 	int ii,k,j,i;
@@ -66,8 +110,10 @@ semestre *leSemestre(char arq[20]){
 			fscanf(arqi,"%d", &k);
 			semn[i].horarios[j] = k;
 		}
-		
-
+		semn[i].horarios= geraSequencia(semn[i].horarios,semn[i].num);
+		//for(j = 0; j < semn[i].num;j++)
+			//printf("%d ", semn[i].horarios[j]);
+		//printf("\n");
 	}
 	
 	posicao_arq = ftell(arqi);

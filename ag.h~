@@ -5,6 +5,7 @@
 
 #define TAM_POPULACAO 10
 #define ERRONALEITURA 1
+#define OK 2
 
 //#define QTDPROF
 //#define QTDDISC//
