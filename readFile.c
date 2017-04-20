@@ -110,7 +110,7 @@ semestre *leSemestre(char arq[20]){
 			fscanf(arqi,"%d", &k);
 			semn[i].horarios[j] = k;
 		}
-		semn[i].horarios= geraSequencia(semn[i].horarios,semn[i].num);
+		//semn[i].horarios= geraSequencia(semn[i].horarios,semn[i].num);
 		//for(j = 0; j < semn[i].num;j++)
 			//printf("%d ", semn[i].horarios[j]);
 		//printf("\n");
