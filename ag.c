@@ -603,7 +603,7 @@ int *imprimeaux2(indvo *ppl, int * v, char turn){
 	//puts("quas");
 	//for(k = 0; k < temp;k++)
 	//	printf("%d ",v2[k]);puts("see");
-	free(v1)	
+	free(v1);	
 	return v2;
 		
 
@@ -650,7 +650,7 @@ void imprime(indvo *ppl, disc_aux *dd){
 					printf("  %s(%s)       |", dsa[ppl->genes_indv[v[j]].disc].cod,ppl->genes_indv[v[j]].prof);
 					//printf("t:>%d ", ppl->genes_indv[v[j]].dia_sem);
 					if(ppl->genes_indv[v[j]].dia_sem==19){
-						ispar = 2;free(v);
+						ispar = 2;//free(v);
 						printf("\n");					
 						break;
 					}				
@@ -708,9 +708,10 @@ void imprime(indvo *ppl, disc_aux *dd){
 		
 		}
 	
+		
+		printf("\n");
 		free(v);
 		free(v2);
-		printf("\n");
 	}		
 		
 		
@@ -1024,12 +1025,12 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 	
 	imprime(&ppl->individuos[0],dsa);
 	avaliacao(&ppl->individuos[0]);
-	freeMem(auxsm,"semestre")
-	freeMem(sm,"semestre")
-	freeMem(dsa,"disc_aux")
-	freeMem(pf,"prof_aux")
+	freeMem(auxsm,SEMESTRE);
+	freeMem(sm,SEMESTRE);
+	freeMem(dsa,DISC_AUX);
+	freeMem(pf,PROF_AUX);
 	free(v);
-	free(salas
+	free(salasd);
 	//printf("Quebra: %d prf >: %d", ppl->individuos[0].choques, ppl->individuos[0].qtdpr);	
 	//puts("okeeee");	
 	//if(mutacao(&ppl->individuos[0])){
@@ -1040,14 +1041,14 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 	//	puts("ok");	
 	
 }
-void freeMem(void *algo,char component[10]){ /// Liberar memoria alocadas de cada estrutura separadamente
+void freeMem(void *algo,int component){ /// Liberar memoria alocadas de cada estrutura separadamente
 	int i;
 	if(algo == NULL){
-		printf("Nada para Limpar nesse %s.\n",component)
-		return
+		printf("Nada para Limpar nesse %d.\n",component);
+		return;
 	}
 	switch(component) {
-		case "disc_aux":{
+		case DISC_AUX :{   /// "disc_aux"
 			disc_aux *a = (disc_aux *)algo;
 			for(i=0;i<qtddisc;i++)
 				free(a[i].nome);
@@ -1055,7 +1056,7 @@ void freeMem(void *algo,char component[10]){ /// Liberar memoria alocadas de cad
 			a=NULL;
 			break;
 		}
-		case "semestre":{
+		case SEMESTRE:{   /// "semestre"
 			semestre *a = (semestre *)algo;
 			for(i=0;i<qtdsem;i++)
 				free(a[i].horarios);
@@ -1063,7 +1064,7 @@ void freeMem(void *algo,char component[10]){ /// Liberar memoria alocadas de cad
 			a=NULL;
 			break;
 		}
-		case "prof_aux":{
+		case PROF_AUX:{   /// "prof_aux"
 			prof_aux *a = (prof_aux *)algo;
 			for(i=0;i<qtdprof;i++){
 				free(a[i].horarios);
@@ -1073,20 +1074,20 @@ void freeMem(void *algo,char component[10]){ /// Liberar memoria alocadas de cad
 			a=NULL;
 			break;
 		}	
-		case "plcao":{
+		case PLCAO:{   /// "plcao"
 			plcao *a = (plcao *)algo;
-			freeMem(a.individuos,"indvo")
+			freeMem(a->individuos,INDVO);
 			free(a);
 			break;
 		}	
-		case "indvo":{
+		case INDVO:{   /// "indvo"
 			indvo *a = (indvo *)algo;
 			for(i=0;i<TAM_POPULACAO;i++)
-				freeMem(a[i].genes_indv,"genes");
+				freeMem(a[i].genes_indv,GENES);
 			free(a);
 			break;
 		}
-		case "genes":{
+		case GENES:{   /// "genes"
 			genes *a = (genes *)algo;
 			for(i=0;i<150;i++){
 				free(a[i].prof);
@@ -1096,7 +1097,7 @@ void freeMem(void *algo,char component[10]){ /// Liberar memoria alocadas de cad
 			break;
 		}
 		default:{
-			free(algo);
+			printf("Componente nao identificado");
 			break;
 		}
 	}
@@ -1116,6 +1117,6 @@ int main(int argc, char *argv[ ] ){
 	
 	//	populacao = (plcao *)malloc(sizeof(plcao));
 //	populacao->individuos = (indvo *)malloc(sizeof(indvo)*3);
-	freeMem(populacao,"plcao")
+	freeMem(populacao,PLCAO);
 	return 0;
 }
