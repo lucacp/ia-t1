@@ -1031,6 +1031,41 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 	//	puts("ok");	
 	
 }
+void freeMem(void *algo,char component[10]){
+	switch(component) {
+		case "disc_aux":{
+			disc_aux *a = (disc_aux *)algo;
+			
+			break;
+		}
+		case "semestre":{
+			semestre *a = (semestre *)algo;
+			
+			break;
+		}
+		case "prof_aux":{
+			prof_aux *a = (prof_aux *)algo;
+			
+			break;
+		}	
+		case "plcao":{
+			plcao *a = (plcao *)algo;
+			
+			break;
+		}	
+		case "indvo":{
+			indvo *a = (indvo *)algo;
+			
+			break;
+		}
+		case "genes":{
+			genes *a = (genes *)algo;
+			
+			break;
+		}
+	}
+
+}
 int main(int argc, char *argv[ ] ){
 	int i= 0;
 	//printf("%s", argv[1]);
@@ -1046,5 +1081,6 @@ int main(int argc, char *argv[ ] ){
 	
 	//	populacao = (plcao *)malloc(sizeof(plcao));
 //	populacao->individuos = (indvo *)malloc(sizeof(indvo)*3);
+	freeMem(populacao,"plcao")
 	return 0;
 }

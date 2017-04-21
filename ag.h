@@ -79,4 +79,6 @@ prof_aux *leProfessores(char arq[20]);
 semestre *leSemestre(char arq[20]);
 disc_aux *leDisciplina(char arq[20]);
 
+void freeMem(void *algo,char component[10]);
+
 int testaParada(int *v);
