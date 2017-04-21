@@ -1031,6 +1031,7 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 	freeMem(pf,PROF_AUX);
 	free(v);
 	free(salasd);
+	freeMem(ppl,PLCAO);
 	//printf("Quebra: %d prf >: %d", ppl->individuos[0].choques, ppl->individuos[0].qtdpr);	
 	//puts("okeeee");	
 	//if(mutacao(&ppl->individuos[0])){
@@ -1117,6 +1118,5 @@ int main(int argc, char *argv[ ] ){
 	
 	//	populacao = (plcao *)malloc(sizeof(plcao));
 //	populacao->individuos = (indvo *)malloc(sizeof(indvo)*3);
-	freeMem(populacao,PLCAO);
 	return 0;
 }
