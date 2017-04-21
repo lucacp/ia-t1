@@ -603,7 +603,7 @@ int *imprimeaux2(indvo *ppl, int * v, char turn){
 	//puts("quas");
 	//for(k = 0; k < temp;k++)
 	//	printf("%d ",v2[k]);puts("see");
-		
+	free(v1)	
 	return v2;
 		
 
@@ -688,7 +688,9 @@ void imprime(indvo *ppl, disc_aux *dd){
 	//10-0, 12-1, 14-2, 16-3, 18-4
 	//1-5,3-6,5-7,7-8,9-9,10-10,
 	//12-11,14-12,16-13,18-14
-	
+		free(v);
+		free(v2);
+		
 	
 	}
 	else if(sm[i].se[0]=='N'){
@@ -706,7 +708,8 @@ void imprime(indvo *ppl, disc_aux *dd){
 		
 		}
 	
-	
+		free(v);
+		free(v2);
 		printf("\n");
 	}		
 		
@@ -1021,6 +1024,12 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 	
 	imprime(&ppl->individuos[0],dsa);
 	avaliacao(&ppl->individuos[0]);
+	freeMem(auxsm,"semestre")
+	freeMem(sm,"semestre")
+	freeMem(dsa,"disc_aux")
+	freeMem(pf,"prof_aux")
+	free(v);
+	free(salas
 	//printf("Quebra: %d prf >: %d", ppl->individuos[0].choques, ppl->individuos[0].qtdpr);	
 	//puts("okeeee");	
 	//if(mutacao(&ppl->individuos[0])){
@@ -1031,40 +1040,66 @@ void geraIndividuos(plcao *populacao_t, char *arq){
 	//	puts("ok");	
 	
 }
-void freeMem(void *algo,char component[10]){
+void freeMem(void *algo,char component[10]){ /// Liberar memoria alocadas de cada estrutura separadamente
+	int i;
+	if(algo == NULL){
+		printf("Nada para Limpar nesse %s.\n",component)
+		return
+	}
 	switch(component) {
 		case "disc_aux":{
 			disc_aux *a = (disc_aux *)algo;
-			
+			for(i=0;i<qtddisc;i++)
+				free(a[i].nome);
+			free(a);
+			a=NULL;
 			break;
 		}
 		case "semestre":{
 			semestre *a = (semestre *)algo;
-			
+			for(i=0;i<qtdsem;i++)
+				free(a[i].horarios);
+			free(a);
+			a=NULL;
 			break;
 		}
 		case "prof_aux":{
 			prof_aux *a = (prof_aux *)algo;
-			
+			for(i=0;i<qtdprof;i++){
+				free(a[i].horarios);
+				free(a[i].nome);
+			}
+			free(a);
+			a=NULL;
 			break;
 		}	
 		case "plcao":{
 			plcao *a = (plcao *)algo;
-			
+			freeMem(a.individuos,"indvo")
+			free(a);
 			break;
 		}	
 		case "indvo":{
 			indvo *a = (indvo *)algo;
-			
+			for(i=0;i<TAM_POPULACAO;i++)
+				freeMem(a[i].genes_indv,"genes");
+			free(a);
 			break;
 		}
 		case "genes":{
 			genes *a = (genes *)algo;
-			
+			for(i=0;i<150;i++){
+				free(a[i].prof);
+				free(a[i].notpref);
+			}
+			free(a);
+			break;
+		}
+		default:{
+			free(algo);
 			break;
 		}
 	}
-
 }
 int main(int argc, char *argv[ ] ){
 	int i= 0;
