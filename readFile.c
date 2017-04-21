@@ -104,7 +104,7 @@ semestre *leSemestre(char arq[20]){
 		fscanf(arqi,"%s %d %d", t, &ii,&l);
 		strcpy(semn[i].se,t);
 		semn[i].sala = ii;
-		semn[i].horarios = (int *)malloc(sizeof(int)*ii);
+		semn[i].horarios = (int *)malloc(sizeof(int)*l); // ao inves de "*ii" vamos usar *l pois não precisa mais do que o numero de horarios que está disponivel para utilizar.		
 		semn[i].num = l;
 		for(j = 0;j < l;j++){
 			fscanf(arqi,"%d", &k);
